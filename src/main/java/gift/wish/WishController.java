@@ -5,6 +5,7 @@ import gift.member.Member;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +36,7 @@ public class WishController {
     ) {
         Member member = authenticationResolver.extractMember(authorization);
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Page<WishResponse> wishes = wishService.getWishes(member.getId(), pageable);
         return ResponseEntity.ok(wishes);
@@ -48,7 +49,7 @@ public class WishController {
     ) {
         Member member = authenticationResolver.extractMember(authorization);
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         return wishService.addWish(member.getId(), request)
@@ -69,14 +70,14 @@ public class WishController {
     ) {
         Member member = authenticationResolver.extractMember(authorization);
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         return wishService.removeWish(member.getId(), id)
             .map(result -> switch (result) {
                 case SUCCESS -> ResponseEntity.noContent().<Void>build();
                 case NOT_FOUND -> ResponseEntity.notFound().<Void>build();
-                case FORBIDDEN -> ResponseEntity.status(403).<Void>build();
+                case FORBIDDEN -> ResponseEntity.status(HttpStatus.FORBIDDEN).<Void>build();
             })
             .orElse(ResponseEntity.notFound().build());
     }
