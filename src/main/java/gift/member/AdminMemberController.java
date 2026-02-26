@@ -41,7 +41,7 @@ public class AdminMemberController {
         Model model
     ) {
         if (memberRepository.existsByEmail(email)) {
-            populateNewFormError(model, email, "Email is already registered.");
+            populateNewFormError(model, email, "이미 등록된 이메일입니다.");
             return "member/new";
         }
 
@@ -52,7 +52,7 @@ public class AdminMemberController {
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         final Member member = memberRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Member not found. id=" + id));
+            .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다. id=" + id));
         model.addAttribute("member", member);
         return "member/edit";
     }
@@ -64,7 +64,7 @@ public class AdminMemberController {
         @RequestParam String password
     ) {
         final Member member = memberRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Member not found. id=" + id));
+            .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다. id=" + id));
         member.update(email, password);
         memberRepository.save(member);
         return "redirect:/admin/members";
@@ -76,7 +76,7 @@ public class AdminMemberController {
         @RequestParam int amount
     ) {
         final Member member = memberRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Member not found. id=" + id));
+            .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다. id=" + id));
         member.chargePoint(amount);
         memberRepository.save(member);
         return "redirect:/admin/members";
