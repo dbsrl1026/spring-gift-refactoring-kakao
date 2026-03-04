@@ -48,9 +48,10 @@ public class OptionController {
         @PathVariable Long productId,
         @PathVariable Long optionId
     ) {
-        return optionService.deleteOption(productId, optionId)
-            .map(success -> ResponseEntity.noContent().<Void>build())
-            .orElse(ResponseEntity.notFound().build());
+        return switch (optionService.deleteOption(productId, optionId)) {
+            case SUCCESS -> ResponseEntity.noContent().build();
+            case NOT_FOUND -> ResponseEntity.notFound().build();
+        };
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

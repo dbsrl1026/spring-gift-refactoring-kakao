@@ -37,10 +37,9 @@ public class OptionService {
             });
     }
 
-    public Optional<Boolean> deleteOption(Long productId, Long optionId) {
-        Optional<Product> productOpt = productRepository.findById(productId);
-        if (productOpt.isEmpty()) {
-            return Optional.empty();
+    public DeleteResult deleteOption(Long productId, Long optionId) {
+        if (productRepository.findById(productId).isEmpty()) {
+            return DeleteResult.NOT_FOUND;
         }
 
         List<Option> options = optionRepository.findByProductId(productId);
@@ -52,8 +51,13 @@ public class OptionService {
             .filter(option -> option.getProduct().getId().equals(productId))
             .map(option -> {
                 optionRepository.delete(option);
-                return true;
-            });
+                return DeleteResult.SUCCESS;
+            })
+            .orElse(DeleteResult.NOT_FOUND);
+    }
+
+    public enum DeleteResult {
+        SUCCESS, NOT_FOUND
     }
 
     private void validateName(String name) {
