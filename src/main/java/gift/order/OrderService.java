@@ -20,7 +20,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OptionRepository optionRepository;
-    private final WishRepository wishRepository;
+    private final WishRepository wishRepository;  // TODO: 주문 완료 후 위시리스트 정리 기능 구현 예정
     private final MemberRepository memberRepository;
     private final KakaoMessageClient kakaoMessageClient;
 
