@@ -64,4 +64,33 @@ public class ProductService {
             throw new IllegalArgumentException(String.join(", ", errors));
         }
     }
+
+    // Admin operations
+
+    public List<Product> findAll() {
+        return productRepository.findAll();
+    }
+
+    public Product findById(Long id) {
+        return productRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다. id=" + id));
+    }
+
+    public Product create(String name, int price, String imageUrl, Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new IllegalArgumentException("카테고리가 존재하지 않습니다. id=" + categoryId));
+        return productRepository.save(new Product(name, price, imageUrl, category));
+    }
+
+    public Product update(Long id, String name, int price, String imageUrl, Long categoryId) {
+        Product product = findById(id);
+        Category category = categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new IllegalArgumentException("카테고리가 존재하지 않습니다. id=" + categoryId));
+        product.update(name, price, imageUrl, category);
+        return productRepository.save(product);
+    }
+
+    public List<String> validateNameForAdmin(String name) {
+        return ProductNameValidator.validate(name, true);
+    }
 }

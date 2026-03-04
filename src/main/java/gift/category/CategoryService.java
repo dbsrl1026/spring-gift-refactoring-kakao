@@ -36,4 +36,15 @@ public class CategoryService {
     public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);
     }
+
+    // Admin operations
+
+    public List<Category> findAll() {
+        return categoryRepository.findAll();
+    }
+
+    public Category findById(Long id) {
+        return categoryRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("카테고리가 존재하지 않습니다. id=" + id));
+    }
 }
