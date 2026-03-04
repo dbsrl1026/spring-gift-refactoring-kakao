@@ -41,17 +41,13 @@ public class ProductService {
     public Optional<ProductResponse> updateProduct(Long id, ProductRequest request) {
         validateName(request.name());
 
-        Optional<Category> categoryOpt = categoryRepository.findById(request.categoryId());
-        if (categoryOpt.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return productRepository.findById(id)
-            .map(product -> {
-                product.update(request.name(), request.price(), request.imageUrl(), categoryOpt.get());
-                Product saved = productRepository.save(product);
-                return ProductResponse.from(saved);
-            });
+        return categoryRepository.findById(request.categoryId())
+            .flatMap(category -> productRepository.findById(id)
+                .map(product -> {
+                    product.update(request.name(), request.price(), request.imageUrl(), category);
+                    Product saved = productRepository.save(product);
+                    return ProductResponse.from(saved);
+                }));
     }
 
     public void deleteProduct(Long id) {
