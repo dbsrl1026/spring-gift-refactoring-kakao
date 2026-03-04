@@ -4,6 +4,8 @@ import gift.auth.JwtProvider;
 import gift.auth.TokenResponse;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
@@ -34,5 +36,40 @@ public class MemberService {
 
         String token = jwtProvider.createToken(member.getEmail());
         return new TokenResponse(token);
+    }
+
+    // Admin operations
+
+    public List<Member> findAll() {
+        return memberRepository.findAll();
+    }
+
+    public Member findById(Long id) {
+        return memberRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다. id=" + id));
+    }
+
+    public boolean existsByEmail(String email) {
+        return memberRepository.existsByEmail(email);
+    }
+
+    public Member create(String email, String password) {
+        return memberRepository.save(new Member(email, password));
+    }
+
+    public Member update(Long id, String email, String password) {
+        Member member = findById(id);
+        member.update(email, password);
+        return memberRepository.save(member);
+    }
+
+    public Member chargePoint(Long id, int amount) {
+        Member member = findById(id);
+        member.chargePoint(amount);
+        return memberRepository.save(member);
+    }
+
+    public void delete(Long id) {
+        memberRepository.deleteById(id);
     }
 }
