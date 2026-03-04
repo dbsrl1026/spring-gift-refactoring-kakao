@@ -5,7 +5,7 @@ import gift.member.MemberRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-class KakaoAuthService {
+public class KakaoAuthService {
     private final KakaoLoginClient kakaoLoginClient;
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
