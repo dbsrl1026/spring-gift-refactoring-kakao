@@ -32,12 +32,12 @@ public class OrderController {
         @RequestHeader("Authorization") String authorization,
         Pageable pageable
     ) {
-        Member member = authenticationResolver.extractMember(authorization);
-        if (member == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        Page<OrderResponse> orders = orderService.getOrders(member.getId(), pageable);
-        return ResponseEntity.ok(orders);
+        return authenticationResolver.extractMember(authorization)
+            .map(member -> {
+                Page<OrderResponse> orders = orderService.getOrders(member.getId(), pageable);
+                return ResponseEntity.ok(orders);
+            })
+            .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
     @PostMapping
@@ -45,14 +45,11 @@ public class OrderController {
         @RequestHeader("Authorization") String authorization,
         @Valid @RequestBody OrderRequest request
     ) {
-        Member member = authenticationResolver.extractMember(authorization);
-        if (member == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        return orderService.createOrder(member, request)
-            .map(response -> ResponseEntity.created(URI.create("/api/orders/" + response.id()))
-                .body(response))
-            .orElse(ResponseEntity.notFound().build());
+        return authenticationResolver.extractMember(authorization)
+            .map(member -> orderService.createOrder(member, request)
+                .map(response -> ResponseEntity.created(URI.create("/api/orders/" + response.id()))
+                    .body(response))
+                .orElse(ResponseEntity.notFound().build()))
+            .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 }
