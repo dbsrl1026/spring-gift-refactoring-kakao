@@ -322,6 +322,39 @@ class OrderAcceptanceTest {
         }
 
         @Test
+        @DisplayName("실패: 포인트 부족 시 재고가 롤백되어야 한다 (트랜잭션 원자성)")
+        void fail_insufficientPoints_shouldRollbackStock() {
+            // Given: 포인트 부족한 회원
+            Member poorMember = memberRepository.save(new Member("poor@example.com", "password"));
+            poorMember.chargePoint(100); // 100 포인트만 (상품가격 1000원보다 적음)
+            memberRepository.save(poorMember);
+            String poorToken = getToken("poor@example.com", "password");
+            int initialStock = option.getQuantity(); // 100
+
+            // When: 포인트 부족으로 주문 실패
+            RestAssured.given()
+                .header("Authorization", "Bearer " + poorToken)
+                .contentType(ContentType.JSON)
+                .body("""
+                    {
+                        "optionId": %d,
+                        "quantity": 1,
+                        "message": "메시지"
+                    }
+                    """.formatted(option.getId()))
+                .when()
+                .post("/api/orders")
+                .then()
+                .statusCode(500);
+
+            // Then: 재고가 차감되지 않아야 한다 (트랜잭션 롤백)
+            Option updated = optionRepository.findById(option.getId()).orElseThrow();
+            assertThat(updated.getQuantity())
+                .as("포인트 부족으로 주문 실패 시 재고가 롤백되어야 한다")
+                .isEqualTo(initialStock);
+        }
+
+        @Test
         @DisplayName("실패: 수량이 0이면 400을 반환한다")
         void fail_zeroQuantity() {
             RestAssured.given()

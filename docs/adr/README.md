@@ -9,6 +9,7 @@
 | [001](001-refactoring-strategy.md) | 리팩토링 전략 | 승인됨 |
 | [002](002-service-layer-extraction.md) | 서비스 계층 추출 전략 | 승인됨 |
 | [003](003-code-smell-fixes.md) | 코드 스멜 수정 전략 | 승인됨 |
+| [004](004-transaction-boundary.md) | 트랜잭션 경계 설정 | 승인됨 |
 
 ## ADR 작성 기준
 

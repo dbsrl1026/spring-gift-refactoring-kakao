@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -42,19 +43,7 @@ public class OrderService {
         return orderRepository.findByMemberId(memberId, pageable).map(OrderResponse::from);
     }
 
-    // TODO: @Transactional 추가 필요
-    //  - 현재 여러 save()가 개별 트랜잭션으로 실행됨
-    //  - 부분 실패 시나리오: 포인트 부족 시 재고만 차감되고 주문은 생성되지 않는 데이터 불일치 발생 가능
-    //  - 해결: @Transactional로 원자성 보장, 실패 시 전체 롤백
-    //  - 관련 테스트 추가 필요: 포인트 부족 시나리오
-    //
-    // order flow:
-    // 1. validate option
-    // 2. subtract stock
-    // 3. deduct points
-    // 4. save order
-    // 5. cleanup wish
-    // 6. send kakao notification
+    @Transactional
     public Optional<OrderResponse> createOrder(Member member, OrderRequest request) {
         return optionRepository.findById(request.optionId())
             .map(option -> {
