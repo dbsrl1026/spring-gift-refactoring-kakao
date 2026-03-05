@@ -52,7 +52,7 @@ public class OrderService {
                 optionRepository.save(option);
 
                 // deduct points
-                int price = option.getProduct().getPrice() * request.quantity();
+                int price = option.calculateTotalPrice(request.quantity());
                 member.deductPoint(price);
                 memberRepository.save(member);
 
