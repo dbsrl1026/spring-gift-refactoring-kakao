@@ -40,4 +40,21 @@ class OptionTest {
         // Then
         assertThat(totalPrice).isEqualTo(2500);
     }
+
+    @Test
+    @DisplayName("calculateTotalPrice: 수량이 0일 때 0을 반환한다")
+    void calculateTotalPrice_zeroQuantity() {
+        // Given
+        Category category = new Category("카테고리", "#000", "http://img.com", "설명");
+        Product product = new Product("상품", 1000, "http://img.com", category);
+        Option option = new Option(product, "옵션", 100);
+
+        // When
+        int totalPrice = option.calculateTotalPrice(0);
+
+        // Then
+        assertThat(totalPrice)
+            .as("수량 0일 때 가격은 0이어야 한다")
+            .isEqualTo(0);
+    }
 }
