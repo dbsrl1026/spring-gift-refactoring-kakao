@@ -46,10 +46,15 @@ public class OrderController {
         @Valid @RequestBody OrderRequest request
     ) {
         return authenticationResolver.extractMember(authorization)
-            .map(member -> orderService.createOrder(member, request)
-                .map(response -> ResponseEntity.created(URI.create("/api/orders/" + response.id()))
-                    .body(response))
-                .orElse(ResponseEntity.notFound().build()))
+            .map(member -> createOrderForMember(member, request))
             .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+    }
+
+    private ResponseEntity<OrderResponse> createOrderForMember(Member member, OrderRequest request) {
+        return orderService.createOrder(member, request)
+            .map(response -> ResponseEntity
+                .created(URI.create("/api/orders/" + response.id()))
+                .body(response))
+            .orElse(ResponseEntity.notFound().build());
     }
 }
