@@ -13,37 +13,31 @@ Optional의 목적(null 안전성)을 훼손합니다.
 
 | 파일 | 라인 | 수정 여부 |
 |------|------|----------|
-| `AuthenticationResolver.java` | 29 | **제외** (아래 사유 참조) |
+| `AuthenticationResolver.java` | 29 | ✅ 수정됨 (Step 2에서 Optional 반환으로 변경) |
 | `CategoryController.java` | 46 | ✅ 수정됨 |
 | `OptionController.java` | 37, 54, 74, 84 | ✅ 수정됨 |
 | `OrderController.java` | 81 | ✅ 수정됨 |
 | `ProductController.java` | 41, 52, 69, 74 | ✅ 수정됨 |
 | `WishController.java` | 63, 69, 90 | ✅ 수정됨 |
 
-### AuthenticationResolver 제외 사유
+### AuthenticationResolver ~~제외 사유~~ → 해결됨
 
-`AuthenticationResolver.extractMember()`는 의도적으로 수정하지 않았습니다.
+~~`AuthenticationResolver.extractMember()`는 의도적으로 수정하지 않았습니다.~~
 
-**이유:**
-- 메서드 시그니처가 `Member`를 반환 (nullable)
-- `null` 반환은 "인증 실패"를 의미하는 **정상적인 흐름**
-- 모든 Controller에서 `null` 체크 후 401 응답을 반환하는 구조
+**Step 2에서 해결됨** - [ADR-006](../../adr/006-domain-responsibility.md) 참조
 
 ```java
-// 현재 구조: null = 인증 실패 (정상 흐름)
-Member member = authenticationResolver.extractMember(authorization);
-if (member == null) {
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+// 변경 후: Optional 반환으로 명시적 처리 강제
+public Optional<Member> extractMember(String authorization) {
+    // ...
+    return memberRepository.findByEmail(email);
 }
+
+// Controller: Optional 체이닝
+return authenticationResolver.extractMember(authorization)
+    .map(member -> { /* 로직 */ })
+    .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
 ```
-
-**수정 시 영향:**
-- 메서드 시그니처 변경 필요 (`Optional<Member>` 반환 또는 예외 던지기)
-- 모든 호출자(Controller) 수정 필요
-- 이는 "구조 변경"이 아닌 "작동 변경"에 해당
-
-**향후 계획:**
-- 작동 변경 단계에서 `Optional<Member>` 반환 또는 커스텀 예외 방식으로 개선 검토
 
 ### 예시
 

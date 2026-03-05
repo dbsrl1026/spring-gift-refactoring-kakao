@@ -36,18 +36,13 @@
 
 ## 제외 사항
 
-### AuthenticationResolver.extractMember()
-```java
-return memberRepository.findByEmail(email).orElse(null);
-```
+### ~~AuthenticationResolver.extractMember()~~ → 해결됨
 
-**제외 사유:**
-- 메서드 시그니처가 `Member` 반환 (nullable)
-- `null`은 "인증 실패"를 의미하는 정상 흐름
-- 변경 시 모든 Controller 수정 필요 (작동 변경)
+~~제외 사유: 작동 변경에 해당~~
 
-**향후 계획:**
-- 작동 변경 단계에서 `Optional<Member>` 반환 또는 커스텀 예외 방식으로 개선 검토
+**Step 2에서 해결됨** - [ADR-006](006-domain-responsibility.md) 참조
+- `Optional<Member>` 반환으로 변경
+- OrderController, WishController Optional 체이닝으로 수정
 
 ### 하드코딩된 Kakao API URL
 **제외 사유:**
