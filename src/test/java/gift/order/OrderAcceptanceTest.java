@@ -409,5 +409,35 @@ class OrderAcceptanceTest {
                 .then()
                 .statusCode(401);
         }
+
+        @Test
+        @DisplayName("성공: 주문 완료 시 위시리스트에서 해당 상품이 제거된다")
+        void success_removesFromWishlist() {
+            // Given: 위시리스트에 상품 추가
+            wishRepository.save(new gift.wish.Wish(member.getId(), product));
+            assertThat(wishRepository.findByMemberIdAndProductId(member.getId(), product.getId()))
+                .isPresent();
+
+            // When: 주문 생성
+            RestAssured.given()
+                .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .body("""
+                    {
+                        "optionId": %d,
+                        "quantity": 1,
+                        "message": "메시지"
+                    }
+                    """.formatted(option.getId()))
+                .when()
+                .post("/api/orders")
+                .then()
+                .statusCode(201);
+
+            // Then: 위시리스트에서 해당 상품 제거됨
+            assertThat(wishRepository.findByMemberIdAndProductId(member.getId(), product.getId()))
+                .as("주문 완료 후 위시리스트에서 해당 상품이 제거되어야 한다")
+                .isEmpty();
+        }
     }
 }

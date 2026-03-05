@@ -21,7 +21,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OptionRepository optionRepository;
-    private final WishRepository wishRepository;  // TODO: 주문 완료 후 위시리스트 정리 기능 구현 예정
+    private final WishRepository wishRepository;
     private final MemberRepository memberRepository;
     private final KakaoMessageClient kakaoMessageClient;
 
@@ -58,6 +58,10 @@ public class OrderService {
 
                 // save order
                 Order saved = orderRepository.save(new Order(option, member.getId(), request.quantity(), request.message()));
+
+                // cleanup wishlist
+                wishRepository.findByMemberIdAndProductId(member.getId(), option.getProduct().getId())
+                    .ifPresent(wishRepository::delete);
 
                 // best-effort kakao notification
                 sendKakaoMessageIfPossible(member, saved, option);
