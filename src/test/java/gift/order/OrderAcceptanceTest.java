@@ -439,5 +439,34 @@ class OrderAcceptanceTest {
                 .as("주문 완료 후 위시리스트에서 해당 상품이 제거되어야 한다")
                 .isEmpty();
         }
+
+        @Test
+        @DisplayName("성공: 위시리스트에 없는 상품도 주문할 수 있다")
+        void success_orderWithoutWishlist() {
+            // Given: 위시리스트가 비어있음
+            assertThat(wishRepository.findByMemberIdAndProductId(member.getId(), product.getId()))
+                .isEmpty();
+
+            // When: 주문 생성
+            RestAssured.given()
+                .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .body("""
+                    {
+                        "optionId": %d,
+                        "quantity": 1,
+                        "message": "메시지"
+                    }
+                    """.formatted(option.getId()))
+                .when()
+                .post("/api/orders")
+                .then()
+                .statusCode(201);
+
+            // Then: 주문 성공 확인
+            assertThat(orderRepository.findByMemberId(member.getId(), org.springframework.data.domain.Pageable.unpaged()).getContent())
+                .as("위시리스트에 없어도 주문이 생성되어야 한다")
+                .hasSize(1);
+        }
     }
 }
