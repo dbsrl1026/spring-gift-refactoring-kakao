@@ -39,6 +39,7 @@ public class OrderService {
         this.kakaoMessageClient = kakaoMessageClient;
     }
 
+    @Transactional(readOnly = true)
     public Page<OrderResponse> getOrders(Long memberId, Pageable pageable) {
         return orderRepository.findByMemberId(memberId, pageable).map(OrderResponse::from);
     }
