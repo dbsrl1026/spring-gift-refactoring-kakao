@@ -11,6 +11,7 @@
 | [003](003-code-smell-fixes.md) | 코드 스멜 수정 전략 | 승인됨 |
 | [004](004-transaction-boundary.md) | 트랜잭션 경계 설정 | 승인됨 |
 | [005](005-wishlist-cleanup-on-order.md) | 주문 완료 시 위시리스트 정리 | 승인됨 |
+| [006](006-domain-responsibility.md) | 도메인 책임 되찾기 | 승인됨 |
 
 ## ADR 작성 기준
 

@@ -27,11 +27,11 @@
 - **ADR**: [005-wishlist-cleanup-on-order.md](../adr/005-wishlist-cleanup-on-order.md)
 
 ### 3. 도메인 책임 되찾기 (최소 2개)
-- **후보**:
-  - [ ] `AuthenticationResolver.extractMember()`: `orElse(null)` → `Optional<Member>` 또는 커스텀 예외
-  - [ ] 가격 계산 로직: Service → Domain으로 이동
-  - [ ] 유효성 검증: Service → Domain으로 이동
-- **상태**: [ ] 미완료
+- **완료 항목**:
+  - [x] `AuthenticationResolver.extractMember()`: `orElse(null)` → `Optional<Member>`
+  - [x] 가격 계산 로직: Service → Domain으로 이동 (`Option.calculateTotalPrice()`)
+- **상태**: [x] 완료
+- **ADR**: [006-domain-responsibility.md](../adr/006-domain-responsibility.md)
 
 ---
 
