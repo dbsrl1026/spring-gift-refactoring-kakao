@@ -12,6 +12,10 @@
 | [004](004-transaction-boundary.md) | 트랜잭션 경계 설정 | 승인됨 |
 | [005](005-wishlist-cleanup-on-order.md) | 주문 완료 시 위시리스트 정리 | 승인됨 |
 | [006](006-domain-responsibility.md) | 도메인 책임 되찾기 | 승인됨 |
+| [007](007-controller-readability.md) | Controller 가독성 개선 | 승인됨 |
+| [008](008-boundary-value-tests.md) | 경계값 테스트 추가 | 승인됨 |
+| [009](009-wishlist-edge-case-test.md) | 위시리스트 엣지 케이스 테스트 | 승인됨 |
+| [010](010-readonly-transactions.md) | 읽기 전용 트랜잭션 | 승인됨 |
 
 ## ADR 작성 기준
 
