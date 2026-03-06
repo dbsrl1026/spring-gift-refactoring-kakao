@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class WishService {
     private final WishRepository wishRepository;
     private final ProductRepository productRepository;

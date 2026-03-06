@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class OrderService {
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 
@@ -44,7 +45,6 @@ public class OrderService {
         return orderRepository.findByMemberId(memberId, pageable).map(OrderResponse::from);
     }
 
-    @Transactional
     public Optional<OrderResponse> createOrder(Member member, OrderRequest request) {
         return optionRepository.findById(request.optionId())
             .map(option -> {
