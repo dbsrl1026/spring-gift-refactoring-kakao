@@ -48,7 +48,7 @@ public class OrderService {
     }
 
     public Optional<OrderResponse> createOrder(Member member, OrderRequest request) {
-        return optionRepository.findById(request.optionId())
+        return optionRepository.findByIdForUpdate(request.optionId())
             .map(option -> {
                 // subtract stock
                 option.subtractQuantity(request.quantity());

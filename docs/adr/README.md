@@ -22,6 +22,7 @@
 | [014](014-global-exception-handler.md) | 전역 예외 처리 통합 | 승인됨 |
 | [015](015-authenticated-member-resolver.md) | HandlerMethodArgumentResolver로 인증 보일러플레이트 제거 | 승인됨 |
 | [016](016-kakao-message-after-commit.md) | 카카오 메시지 전송을 트랜잭션 밖으로 분리 | 승인됨 |
+| [017](017-pessimistic-lock-for-stock.md) | 비관적 락으로 동시 주문 시 Overselling 방지 | 승인됨 |
 
 ## ADR 작성 기준
 
