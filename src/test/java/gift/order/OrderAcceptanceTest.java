@@ -292,7 +292,7 @@ class OrderAcceptanceTest {
                 .when()
                 .post("/api/orders")
                 .then()
-                .statusCode(500); // IllegalArgumentException이 처리되지 않아 500 반환
+                .statusCode(400);
         }
 
         @Test
@@ -318,7 +318,7 @@ class OrderAcceptanceTest {
                 .when()
                 .post("/api/orders")
                 .then()
-                .statusCode(500); // IllegalArgumentException이 처리되지 않아 500 반환
+                .statusCode(400);
         }
 
         @Test
@@ -345,7 +345,7 @@ class OrderAcceptanceTest {
                 .when()
                 .post("/api/orders")
                 .then()
-                .statusCode(500);
+                .statusCode(400);
 
             // Then: 재고가 차감되지 않아야 한다 (트랜잭션 롤백)
             Option updated = optionRepository.findById(option.getId()).orElseThrow();

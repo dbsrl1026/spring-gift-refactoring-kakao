@@ -19,6 +19,7 @@
 | [011](011-transactional-convention.md) | 트랜잭션 어노테이션 컨벤션 | 승인됨 |
 | [012](012-price-calculation-safety.md) | 가격 계산 안전성 강화 | 승인됨 |
 | [013](013-service-unit-tests.md) | 서비스 레벨 단위 테스트 추가 | 승인됨 |
+| [014](014-global-exception-handler.md) | 전역 예외 처리 통합 | 승인됨 |
 
 ## ADR 작성 기준
 
