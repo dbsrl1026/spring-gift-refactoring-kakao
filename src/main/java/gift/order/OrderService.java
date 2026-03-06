@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.Optional;
 
@@ -64,8 +66,13 @@ public class OrderService {
                 wishRepository.findByMemberIdAndProductId(member.getId(), option.getProduct().getId())
                     .ifPresent(wishRepository::delete);
 
-                // best-effort kakao notification
-                sendKakaoMessageIfPossible(member, saved, option);
+                // best-effort kakao notification (트랜잭션 커밋 후 실행)
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        sendKakaoMessageIfPossible(member, saved, option);
+                    }
+                });
 
                 return OrderResponse.from(saved);
             });
