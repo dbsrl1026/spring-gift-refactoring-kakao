@@ -59,7 +59,10 @@ public class Option {
         return quantity;
     }
 
-    public int calculateTotalPrice(int orderQuantity) {
-        return product.getPrice() * orderQuantity;
+    public long calculateTotalPrice(int orderQuantity) {
+        if (orderQuantity < 0) {
+            throw new IllegalArgumentException("주문 수량은 0 이상이어야 합니다.");
+        }
+        return (long) product.getPrice() * orderQuantity;
     }
 }
