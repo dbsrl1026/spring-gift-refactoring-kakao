@@ -17,6 +17,8 @@
 | [009](009-wishlist-edge-case-test.md) | 위시리스트 엣지 케이스 테스트 | 승인됨 |
 | [010](010-readonly-transactions.md) | 읽기 전용 트랜잭션 | 승인됨 |
 | [011](011-transactional-convention.md) | 트랜잭션 어노테이션 컨벤션 | 승인됨 |
+| [012](012-price-calculation-safety.md) | 가격 계산 안전성 강화 | 승인됨 |
+| [013](013-service-unit-tests.md) | 서비스 레벨 단위 테스트 추가 | 승인됨 |
 
 ## ADR 작성 기준
 
