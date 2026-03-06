@@ -145,7 +145,7 @@ class OrderAcceptanceTest {
         }
 
         @Test
-        @DisplayName("실패: 인증 헤더 없이 조회하면 400을 반환한다")
+        @DisplayName("실패: 인증 헤더 없이 조회하면 401을 반환한다")
         void fail_noAuthHeader() {
             RestAssured.given()
                 .param("page", 0)
@@ -153,7 +153,7 @@ class OrderAcceptanceTest {
                 .when()
                 .get("/api/orders")
                 .then()
-                .statusCode(400);
+                .statusCode(401);
         }
     }
 
@@ -374,7 +374,7 @@ class OrderAcceptanceTest {
         }
 
         @Test
-        @DisplayName("실패: 인증 헤더 없이 주문하면 400을 반환한다")
+        @DisplayName("실패: 인증 헤더 없이 주문하면 401을 반환한다")
         void fail_noAuthHeader() {
             RestAssured.given()
                 .contentType(ContentType.JSON)
@@ -388,7 +388,7 @@ class OrderAcceptanceTest {
                 .when()
                 .post("/api/orders")
                 .then()
-                .statusCode(400);
+                .statusCode(401);
         }
 
         @Test

@@ -1,16 +1,14 @@
 package gift.order;
 
-import gift.auth.AuthenticationResolver;
+import gift.auth.AuthenticatedMember;
 import gift.member.Member;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,37 +18,25 @@ import java.net.URI;
 @RequestMapping("/api/orders")
 public class OrderController {
     private final OrderService orderService;
-    private final AuthenticationResolver authenticationResolver;
 
-    public OrderController(OrderService orderService, AuthenticationResolver authenticationResolver) {
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
-        this.authenticationResolver = authenticationResolver;
     }
 
     @GetMapping
     public ResponseEntity<Page<OrderResponse>> getOrders(
-        @RequestHeader("Authorization") String authorization,
+        @AuthenticatedMember Member member,
         Pageable pageable
     ) {
-        return authenticationResolver.extractMember(authorization)
-            .map(member -> {
-                Page<OrderResponse> orders = orderService.getOrders(member.getId(), pageable);
-                return ResponseEntity.ok(orders);
-            })
-            .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        Page<OrderResponse> orders = orderService.getOrders(member.getId(), pageable);
+        return ResponseEntity.ok(orders);
     }
 
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(
-        @RequestHeader("Authorization") String authorization,
+        @AuthenticatedMember Member member,
         @Valid @RequestBody OrderRequest request
     ) {
-        return authenticationResolver.extractMember(authorization)
-            .map(member -> createOrderForMember(member, request))
-            .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
-    }
-
-    private ResponseEntity<OrderResponse> createOrderForMember(Member member, OrderRequest request) {
         return orderService.createOrder(member, request)
             .map(response -> ResponseEntity
                 .created(URI.create("/api/orders/" + response.id()))

@@ -20,6 +20,7 @@
 | [012](012-price-calculation-safety.md) | 가격 계산 안전성 강화 | 승인됨 |
 | [013](013-service-unit-tests.md) | 서비스 레벨 단위 테스트 추가 | 승인됨 |
 | [014](014-global-exception-handler.md) | 전역 예외 처리 통합 | 승인됨 |
+| [015](015-authenticated-member-resolver.md) | HandlerMethodArgumentResolver로 인증 보일러플레이트 제거 | 승인됨 |
 
 ## ADR 작성 기준
 
