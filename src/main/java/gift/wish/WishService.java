@@ -38,19 +38,19 @@ public class WishService {
 
     public record AddWishResult(WishResponse response, boolean created) {}
 
-    public Optional<DeleteResult> removeWish(Long memberId, Long wishId) {
+    public DeleteResult removeWish(Long memberId, Long wishId) {
         Optional<Wish> wishOpt = wishRepository.findById(wishId);
         if (wishOpt.isEmpty()) {
-            return Optional.of(DeleteResult.NOT_FOUND);
+            return DeleteResult.NOT_FOUND;
         }
 
         Wish wish = wishOpt.get();
         if (!wish.getMemberId().equals(memberId)) {
-            return Optional.of(DeleteResult.FORBIDDEN);
+            return DeleteResult.FORBIDDEN;
         }
 
         wishRepository.delete(wish);
-        return Optional.of(DeleteResult.SUCCESS);
+        return DeleteResult.SUCCESS;
     }
 
     public enum DeleteResult {

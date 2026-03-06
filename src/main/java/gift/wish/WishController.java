@@ -57,12 +57,10 @@ public class WishController {
         @AuthenticatedMember Member member,
         @PathVariable Long id
     ) {
-        return wishService.removeWish(member.getId(), id)
-            .map(result -> switch (result) {
-                case SUCCESS -> ResponseEntity.noContent().<Void>build();
-                case NOT_FOUND -> ResponseEntity.notFound().<Void>build();
-                case FORBIDDEN -> ResponseEntity.status(HttpStatus.FORBIDDEN).<Void>build();
-            })
-            .orElse(ResponseEntity.notFound().build());
+        return switch (wishService.removeWish(member.getId(), id)) {
+            case SUCCESS -> ResponseEntity.noContent().build();
+            case NOT_FOUND -> ResponseEntity.notFound().build();
+            case FORBIDDEN -> ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        };
     }
 }
